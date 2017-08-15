@@ -40,13 +40,11 @@ public class InnerHorizontalSurfaceWPS implements VectorProcess  {
     ){
 
         DataSource myDS = null;
-        Connection connection;
 
         try {
             InitialContext ic = new InitialContext();
             myDS = (DataSource)ic.lookup("jdbc/sigodb");
-            connection = myDS.getConnection();
-        } catch (NamingException | SQLException e) {
+        } catch (NamingException e) {
             throw new Error(e);
         }
 
@@ -75,8 +73,8 @@ public class InnerHorizontalSurfaceWPS implements VectorProcess  {
 
         Double height = null, radio = null;
 
-        try {
-            ResultSet resultSet = myDS.getConnection().createStatement().executeQuery(query);
+        try(Connection connection = myDS.getConnection()) {
+            ResultSet resultSet = connection.createStatement().executeQuery(query);
 
             while(resultSet.next()){
                 switch (resultSet.getString(1)){
